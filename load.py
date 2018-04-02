@@ -1,91 +1,52 @@
+import numpy as np
+import scipy.misc
+from skimage import measure
+def convert_rgb_to_y(image, jpeg_mode=True, max_value=255.0):
+	if len(image.shape) <= 2 or image.shape[2] == 1:
+		return image
 
-        nn = Conv2d(n, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c1/1')
-        nn = BatchNormLayer(nn, act=tf.nn.relu, is_train=is_train, gamma_init=g_init, name='n64s1/b1/1' )
-        nn = Conv2d(nn, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c2/1')
-        nn = BatchNormLayer(nn, is_train=is_train, gamma_init=g_init, name='n64s1/b2/1' )
-        nn = ElementwiseLayer([n, nn], tf.add, 'b_residual_add/1')
-        n = nn
-        nn = Conv2d(n, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c1/2')
-        nn = BatchNormLayer(nn, act=tf.nn.relu, is_train=is_train, gamma_init=g_init, name='n64s1/b1/2' )
-        nn = Conv2d(nn, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c2/2')
-        nn = BatchNormLayer(nn, is_train=is_train, gamma_init=g_init, name='n64s1/b2/2' )
-        nn = ElementwiseLayer([n, nn], tf.add, 'b_residual_add/2')
-        n = nn
-        nn = Conv2d(n, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c1/3')
-        nn = BatchNormLayer(nn, act=tf.nn.relu, is_train=is_train, gamma_init=g_init, name='n64s1/b1/3' )
-        nn = Conv2d(nn, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c2/3')
-        nn = BatchNormLayer(nn, is_train=is_train, gamma_init=g_init, name='n64s1/b2/3' )
-        nn = ElementwiseLayer([n, nn], tf.add, 'b_residual_add/3')
-        n = nn
-        nn = Conv2d(n, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c1/4')
-        nn = BatchNormLayer(nn, act=tf.nn.relu, is_train=is_train, gamma_init=g_init, name='n64s1/b1/4' )
-        nn = Conv2d(nn, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c2/4')
-        nn = BatchNormLayer(nn, is_train=is_train, gamma_init=g_init, name='n64s1/b2/4' )
-        nn = ElementwiseLayer([n, nn], tf.add, 'b_residual_add/4')
-        n = nn
-        nn = Conv2d(n, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c1/5')
-        nn = BatchNormLayer(nn, act=tf.nn.relu, is_train=is_train, gamma_init=g_init, name='n64s1/b1/5' )
-        nn = Conv2d(nn, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c2/5')
-        nn = BatchNormLayer(nn, is_train=is_train, gamma_init=g_init, name='n64s1/b2/5' )
-        nn = ElementwiseLayer([n, nn], tf.add, 'b_residual_add/5')
-        n = nn
-        nn = Conv2d(n, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c1/6')
-        nn = BatchNormLayer(nn, act=tf.nn.relu, is_train=is_train, gamma_init=g_init, name='n64s1/b1/6' )
-        nn = Conv2d(nn, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c2/6')
-        nn = BatchNormLayer(nn, is_train=is_train, gamma_init=g_init, name='n64s1/b2/6' )
-        nn = ElementwiseLayer([n, nn], tf.add, 'b_residual_add/6')
-        n = nn
-        nn = Conv2d(n, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c1/7')
-        nn = BatchNormLayer(nn, act=tf.nn.relu, is_train=is_train, gamma_init=g_init, name='n64s1/b1/7' )
-        nn = Conv2d(nn, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c2/7')
-        nn = BatchNormLayer(nn, is_train=is_train, gamma_init=g_init, name='n64s1/b2/7' )
-        nn = ElementwiseLayer([n, nn], tf.add, 'b_residual_add/7')
-        n = nn
-        nn = Conv2d(n, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c1/8')
-        nn = BatchNormLayer(nn, act=tf.nn.relu, is_train=is_train, gamma_init=g_init, name='n64s1/b1/8' )
-        nn = Conv2d(nn, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c2/8')
-        nn = BatchNormLayer(nn, is_train=is_train, gamma_init=g_init, name='n64s1/b2/8' )
-        nn = ElementwiseLayer([n, nn], tf.add, 'b_residual_add/8')
-        n = nn
-        nn = Conv2d(n, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c1/9')
-        nn = BatchNormLayer(nn, act=tf.nn.relu, is_train=is_train, gamma_init=g_init, name='n64s1/b1/9' )
-        nn = Conv2d(nn, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c2/9')
-        nn = BatchNormLayer(nn, is_train=is_train, gamma_init=g_init, name='n64s1/b2/9' )
-        nn = ElementwiseLayer([n, nn], tf.add, 'b_residual_add/9')
-        n = nn
-        nn = Conv2d(n, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c1/10')
-        nn = BatchNormLayer(nn, act=tf.nn.relu, is_train=is_train, gamma_init=g_init, name='n64s1/b1/10' )
-        nn = Conv2d(nn, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c2/10')
-        nn = BatchNormLayer(nn, is_train=is_train, gamma_init=g_init, name='n64s1/b2/10' )
-        nn = ElementwiseLayer([n, nn], tf.add, 'b_residual_add/10')
-        n = nn
-        nn = Conv2d(n, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c1/11')
-        nn = BatchNormLayer(nn, act=tf.nn.relu, is_train=is_train, gamma_init=g_init, name='n64s1/b1/11' )
-        nn = Conv2d(nn, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c2/11')
-        nn = BatchNormLayer(nn, is_train=is_train, gamma_init=g_init, name='n64s1/b2/11' )
-        nn = ElementwiseLayer([n, nn], tf.add, 'b_residual_add/11')
-        n = nn
-        nn = Conv2d(n, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c1/12')
-        nn = BatchNormLayer(nn, act=tf.nn.relu, is_train=is_train, gamma_init=g_init, name='n64s1/b1/12' )
-        nn = Conv2d(nn, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c2/12')
-        nn = BatchNormLayer(nn, is_train=is_train, gamma_init=g_init, name='n64s1/b2/12' )
-        nn = ElementwiseLayer([n, nn], tf.add, 'b_residual_add/12')
-        n = nn
-        nn = Conv2d(n, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c1/13')
-        nn = BatchNormLayer(nn, act=tf.nn.relu, is_train=is_train, gamma_init=g_init, name='n64s1/b1/13' )
-        nn = Conv2d(nn, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c2/13')
-        nn = BatchNormLayer(nn, is_train=is_train, gamma_init=g_init, name='n64s1/b2/13' )
-        nn = ElementwiseLayer([n, nn], tf.add, 'b_residual_add/13')
-        n = nn
-        nn = Conv2d(n, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c1/14')
-        nn = BatchNormLayer(nn, act=tf.nn.relu, is_train=is_train, gamma_init=g_init, name='n64s1/b1/14' )
-        nn = Conv2d(nn, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c2/14')
-        nn = BatchNormLayer(nn, is_train=is_train, gamma_init=g_init, name='n64s1/b2/14' )
-        nn = ElementwiseLayer([n, nn], tf.add, 'b_residual_add/14')
-        n = nn
-        nn = Conv2d(n, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c1/15')
-        nn = BatchNormLayer(nn, act=tf.nn.relu, is_train=is_train, gamma_init=g_init, name='n64s1/b1/15' )
-        nn = Conv2d(nn, 64, (3, 3), (1, 1), act=None, padding='SAME', W_init=w_init, b_init=b_init, name='n64s1/c2/15')
-        nn = BatchNormLayer(nn, is_train=is_train, gamma_init=g_init, name='n64s1/b2/15' )
-        nn = ElementwiseLayer([n, nn], tf.add, 'b_residual_add/15')
-        n = nn
+	if jpeg_mode:
+		xform = np.array([[0.299, 0.587, 0.114]])
+		y_image = image.dot(xform.T)
+	else:
+		xform = np.array([[65.481 / 256.0, 128.553 / 256.0, 24.966 / 256.0]])
+		y_image = image.dot(xform.T) + (16.0 * max_value / 256.0)
+
+	return y_image
+
+def convert_rgb_to_ycbcr(image, jpeg_mode=True, max_value=255):
+	if len(image.shape) < 2 or image.shape[2] == 1:
+		return image
+
+	if jpeg_mode:
+		xform = np.array([[0.299, 0.587, 0.114], [-0.169, - 0.331, 0.500], [0.500, - 0.419, - 0.081]])
+		ycbcr_image = image.dot(xform.T)
+		ycbcr_image[:, :, [1, 2]] += max_value / 2
+	else:
+		xform = np.array(
+			[[65.481 / 256.0, 128.553 / 256.0, 24.966 / 256.0], [- 37.945 / 256.0, - 74.494 / 256.0, 112.439 / 256.0],
+			 [112.439 / 256.0, - 94.154 / 256.0, - 18.285 / 256.0]])
+		ycbcr_image = image.dot(xform.T)
+		ycbcr_image[:, :, 0] += (16.0 * max_value / 256.0)
+		ycbcr_image[:, :, [1, 2]] += (128.0 * max_value / 256.0)
+
+	return ycbcr_image
+image = scipy.misc.imread('/home/wangyang/桌面/SRGAN/samples/evaluate/valid_gen57.png')
+image_true = scipy.misc.imread('/home/wangyang/桌面/SRGAN/samples/evaluate/valid_hr57.png')
+y_image = convert_rgb_to_y(image,False)
+y_image_true = convert_rgb_to_y(image_true,False)
+ssim = measure.compare_ssim(np.array(y_image_true),np.array(y_image),win_size=11,gradient=False,multichannel=True,gaussian_weights=True,full=False,dynamic_range=255)
+psnr = measure.compare_psnr(np.array(y_image_true),np.array(y_image),True,255)
+print(ssim)
+print(psnr)
+"""
+max1 = np.max(y_image_true)
+min1 = np.min(y_image_true)
+max2 = np.max(y_image)
+min2 = np.min(y_image)
+#scipy.misc.imsave('/home/wangyang/桌面/SRGAN/samples/evaluate/valid_gen58_y.png',y_image)
+print(max1)
+print(min1)
+print(max2)
+print(min2)
+"""

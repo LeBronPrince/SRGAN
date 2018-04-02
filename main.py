@@ -254,6 +254,19 @@ def train():
             tl.files.save_npz(net_g.all_params, name=checkpoint_dir+'/g_{}.npz'.format(tl.global_flag['mode']), sess=sess)
             tl.files.save_npz(net_d.all_params, name=checkpoint_dir+'/d_{}.npz'.format(tl.global_flag['mode']), sess=sess)
 
+def convert_rgb_to_y(image, jpeg_mode=True, max_value=255.0):
+	if len(image.shape) <= 2 or image.shape[2] == 1:
+		return image
+
+	if jpeg_mode:
+		xform = np.array([[0.299, 0.587, 0.114]])
+		y_image = image.dot(xform.T)
+	else:
+		xform = np.array([[65.481 / 256.0, 128.553 / 256.0, 24.966 / 256.0]])
+		y_image = image.dot(xform.T) + (16.0 * max_value / 256.0)
+
+	return y_image
+
 def evaluate():
     ## create folders to save result images
     save_dir = "samples/{}".format(tl.global_flag['mode'])
@@ -261,22 +274,10 @@ def evaluate():
     checkpoint_dir = "checkpoint"
 
     ###====================== PRE-LOAD DATA ===========================###
-    # train_hr_img_list = sorted(tl.files.load_file_list(path=config.TRAIN.hr_img_path, regx='.*.png', printable=False))
-    # train_lr_img_list = sorted(tl.files.load_file_list(path=config.TRAIN.lr_img_path, regx='.*.png', printable=False))
     valid_hr_img_list = sorted(tl.files.load_file_list(path=config.VALID.hr_img_path, regx='.*.png', printable=False))
     valid_lr_img_list = sorted(tl.files.load_file_list(path=config.VALID.lr_img_path, regx='.*.png', printable=False))
-
-    ## If your machine have enough memory, please pre-load the whole train set.
-    # train_hr_imgs = read_all_imgs(train_hr_img_list, path=config.TRAIN.hr_img_path, n_threads=32)
-    # for im in train_hr_imgs:
-    #     print(im.shape)
     valid_lr_imgs = read_all_imgs(valid_lr_img_list, path=config.VALID.lr_img_path, n_threads=32)
-    # for im in valid_lr_imgs:
-    #     print(im.shape)
     valid_hr_imgs = read_all_imgs(valid_hr_img_list, path=config.VALID.hr_img_path, n_threads=32)
-    # for im in valid_hr_imgs:
-    #     print(im.shape)
-    # exit()
     size = valid_lr_imgs[58].shape
     t_image = tf.placeholder('float32', [None, size[0], size[1], size[2]], name='input_image')
     # t_image = tf.placeholder('float32', [1, None, None, 3], name='input_image')
@@ -290,7 +291,7 @@ def evaluate():
     ###========================== DEFINE MODEL ============================###
     ssim_ave=0
     psnr_ave=0
-    for imid in range(58,59):#len(valid_lr_imgs)
+    for imid in range(57,58):#len(valid_lr_imgs)
         # 0: 企鹅  81: 蝴蝶 53: 鸟  64: 古堡
         ssim_sum=0
         psnr_sum=0
@@ -312,18 +313,23 @@ def evaluate():
         tl.vis.save_image(out_bicu, save_dir+'/valid_bicubic%d.png' % imid)
         valid_hr_img_float = valid_hr_img.astype('float32')
         ### count the metric for ssim and psnr
-"""
-        im_test = scipy.misc.imread(save_dir+'/valid_bicubic%d.png' % imid)
-        im_true = scipy.misc.imread(save_dir+'/valid_hr%d.png' % imid)
-        ssim = measure.compare_ssim(np.array(im_true),np.array(im_test),win_size=11,gradient=False,multichannel=True,gaussian_weights=True,full=False)
+
+        im_bic = scipy.misc.imread(save_dir+'/valid_bicubic%d.png' % imid)
+        im_gen = scipy.misc.imread(save_dir+'/valid_gen%d.png' % imid)
+
+        im_bic_y = convert_rgb_to_y(im_bic,False)
+        im_true_y = convert_rgb_to_y(valid_hr_img_float,False)
+        im_gen_y = convert_rgb_to_y(im_gen,False)
+
+        ssim = measure.compare_ssim(np.array(im_true_y),np.array(im_gen_y),win_size=11,gradient=False,multichannel=False,gaussian_weights=True,full=False,dynamic_range=255)
         #ssim_sum += ssim
-        psnr = measure.compare_psnr(np.array(im_true),np.array(im_test))
+        psnr = measure.compare_psnr(np.array(im_true_y),np.array(im_gen_y),True,255)
         #psnr_sum += psnr
     #ssim_ave=ssim_sum/len(valid_lr_imgs)
     #psnr_ave=psnr_sum/len(valid_lr_imgs)
         print('the average SSIM is %4.4f' %ssim)
         print('the average PSNR is %4.4f' %psnr)
-"""
+
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
