@@ -28,6 +28,20 @@ config.VALID = edict()
 config.VALID.hr_img_path = 'data2017/DIV2K_valid_HR/'
 config.VALID.lr_img_path = 'data2017/DIV2K_valid_LR_bicubic/X4/'
 
+config.VALID.hr_img_path_set5 = 'data2017/Set5/image_SRF_4/HR/'
+config.VALID.lr_img_path_set5 = 'data2017/Set5/image_SRF_4/LR/'
+
+config.VALID.hr_img_path_set14 = 'data2017/Set14/image_SRF_4/HR/'
+config.VALID.lr_img_path_set14 = 'data2017/Set14/image_SRF_4/LR/'
+
+config.VALID.hr_img_path_u100 = 'data2017/Urban100/image_SRF_4/HR/'
+config.VALID.lr_img_path_u100 = 'data2017/Urban100/image_SRF_4/LR/'
+
+config.VALID.hr_img_path_b100 = 'data2017/BSD100/image_SRF_4/HR/'
+config.VALID.lr_img_path_b100 = 'data2017/BSD100/image_SRF_4/LR/'
+
+config.VALID.hr_img_path_s80 = 'data2017/Sun-Hays80/image_SRF_8/HR/'
+config.VALID.lr_img_path_s80 = 'data2017/Sun-Hays80/image_SRF_8/LR/'
 def log_config(filename, cfg):
     with open(filename, 'w') as f:
         f.write("================================================\n")
